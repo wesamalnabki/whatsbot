@@ -7,6 +7,10 @@ import requests
 import soundfile as sf
 import speech_recognition as sr
 from flask import Flask, jsonify, request
+from dotenv import load_dotenv, find_dotenv
+
+# Load environment variables
+print("Loading env variables --> ", load_dotenv(find_dotenv(usecwd=True)))
 
 app = Flask(__name__)
 
@@ -16,6 +20,8 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Access token for your WhatsApp business account app
 whatsapp_token = os.environ.get("WHATSAPP_TOKEN")
+
+print("whatsapp_token:", whatsapp_token[:10])
 
 # Verify Token defined when configuring the webhook
 verify_token = os.environ.get("VERIFY_TOKEN")
@@ -31,10 +37,11 @@ LANGUGAGE = "en-US"
 
 # get the media url from the media id
 def get_media_url(media_id):
+
     headers = {
         "Authorization": f"Bearer {whatsapp_token}",
     }
-    url = f"https://graph.facebook.com/v16.0/{media_id}/"
+    url = f"https://graph.facebook.com/v22.0/{media_id}/"
     response = requests.get(url, headers=headers)
     print(f"media id response: {response.json()}")
     return response.json()["url"]
@@ -91,7 +98,7 @@ def send_whatsapp_message(body, message):
         "Authorization": f"Bearer {whatsapp_token}",
         "Content-Type": "application/json",
     }
-    url = "https://graph.facebook.com/v15.0/" + phone_number_id + "/messages"
+    url = "https://graph.facebook.com/v22.0/" + phone_number_id + "/messages"
     data = {
         "messaging_product": "whatsapp",
         "to": from_number,
@@ -215,7 +222,7 @@ def home():
 
 
 # Accepts POST and GET requests at /webhook endpoint
-@app.route("/webhook", methods=["POST", "GET"])
+@app.route("/webhooks", methods=["POST", "GET"])
 def webhook():
     if request.method == "GET":
         return verify(request)
@@ -232,4 +239,4 @@ def reset():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True)
+    app.run(debug=True, use_reloader=False)

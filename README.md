@@ -8,6 +8,18 @@
 
 > How DALL-E 2 imagines the project
 
+### Important note:
+This is to explain how to use the verification token in Whatsapp.
+
+1- This service must be running on a https server (secure). So, you can not run it in local. An alternative is to use ngrok service https://dashboard.ngrok.com/ 
+2- Once you get your application running in localhost (http://localhost:5000) --> then using ngrok, the IP will be something like https://721c-95-16-18-23.ngrok-free.app
+3- You go you the configurations of your Whatsapp app, and put the link under the callback URL. IMPORTANT: add /webhooks to the URL. The URL will be: https://721c-95-16-18-23.ngrok-free.app/webhooks
+4- In the verification token, put any secure token, but it MUST be the same token as your VERIFY_TOKEN in the .env file
+5- Then, you click on verify and save. In this case, Whatsapp will send a GET request to your server to validate the toke. If all Ok, the link will be validated.
+6- Activate sending messages to be able to send and receive whatapp messages.
+
+![img.png](img.png)
+
 ## Getting-Started
 To create your own WhatsApp chatbot you all you need to do is:
 1. Creata an [OpenAI API](https://openai.com/product) account and generate an API key
